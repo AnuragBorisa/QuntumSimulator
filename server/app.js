@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/mongoConfig.js";
 import sequelize from "./config/dbConfig.js";
 import authRoutes from "./routes/authRoutes.js";
+import algorithimRoutes from "./routes/algorithmRoutes.js" 
 import simulationRoutes from "./routes/simulationRoutes.js";
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/simulations', simulationRoutes);
+app.use('/api/algorithm/',algorithimRoutes);
 
 const PORT = process.env.PORT || 5000;
 
