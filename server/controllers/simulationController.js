@@ -6,17 +6,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-
 export const createSimulation = async (req, res) => {
-  const { title, description, algorithm, parameters, results, state } = req.body;
+  const { title, description, algorithm, parameters } = req.body;
   try {
     const simulation = await Simulation.create({
       title,
       description,
       algorithm,
       parameters,
-      results,
-      state,
+      results: null, // Initialize with null, will be updated later
+      state: 'pending',  // Set the initial state as 'pending'
       StudentId: req.user.id
     });
     res.status(201).json(simulation);
@@ -38,12 +37,18 @@ export const getSimulations = async (req, res) => {
 
 export const getRecentSimulations = async (req, res) => {
   try {
-   
+    console.log("StudentId from req.user.id:", req.user.id);
     const simulations = await Simulation.findAll({
-      where: { StudentId: req.user.id },
-      order: [['createdAt', 'DESC']], 
-      limit: 5,  
+      where: {
+        StudentId: req.user.id,
+        state: 'completed', // Fetch only completed simulations
+      },
+      order: [['createdAt', 'DESC']],
+      limit: 5,
     });
+
+    console.log("Fetched simulations from database:", simulations);
+
     res.status(200).json(simulations);
   } catch (err) {
     console.error(err.message);
@@ -52,12 +57,13 @@ export const getRecentSimulations = async (req, res) => {
 };
 
 
+
 export const getSimulation = async (req, res) => {
   const { id } = req.params;
   try {
     const simulation = await Simulation.findOne({ where: { id, StudentId: req.user.id } });
     if (!simulation) {
-      return res.status(404).json({ msg: 'Simulation not found' });
+      return res.status(404).json({ msg: 'Simulation not foundss' });
     }
     res.status(200).json(simulation);
   } catch (err) {

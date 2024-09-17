@@ -7,8 +7,8 @@ const Simulation = sequelize.define('Simulation', {
   algorithm: { type: DataTypes.STRING, allowNull: false },
   parameters: { type: DataTypes.JSON, allowNull: true },
   results: { type: DataTypes.JSON, allowNull: true },
-  state: { type: DataTypes.JSON, allowNull: true },
-  filePath: { type: DataTypes.STRING, allowNull: true },  
+  state: { type: DataTypes.STRING, allowNull: true },
+  filePath: { type: DataTypes.STRING, allowNull: true },
 });
 
 export default Simulation;

@@ -2,13 +2,14 @@ import { useState } from 'react';
 import axios from 'axios';
 import QuantumChart from './QuantumChart'; // Import the QuantumChart component
 
-export default function RunAlgorithm({ algorithm, parameters }) {
+export default function RunAlgorithm({ algorithm, parameters,simulationId}) {
   const [result, setResult] = useState(null); // Store result as an object
   const [chartType, setChartType] = useState('bar'); // Default chart type
   const [error, setError] = useState('');
 
   const handleRunAlgorithm = async () => {
     const token = localStorage.getItem('token');
+    ; // Ensure simulation ID is passed from the parent component
 
     // Convert `n` to an integer and ensure the target_state is a binary string of correct length
     const parsedN = parseInt(parameters.n, 10);
@@ -19,10 +20,12 @@ export default function RunAlgorithm({ algorithm, parameters }) {
       return;
     }
 
+    
     try {
       const res = await axios.post(
-        'http://localhost:8080/api/algorithm/run',
+        `http://localhost:8080/api/algorithm/run`,  // Ensure simulationId is included in the request body
         {
+          id: simulationId,  // Include the simulation ID here
           algorithm,
           n: parsedN,
           target_state: targetState,
@@ -33,16 +36,16 @@ export default function RunAlgorithm({ algorithm, parameters }) {
       );
 
       if (res.data.error) {
-        setError(res.data.error);  // Log error from backend
-        console.error(res.data.error);  // Print error for debugging
+        setError(res.data.error);
       } else {
-        setResult(res.data.result); // Directly set result, no need to parse it again
+        setResult(res.data.result);
+        setError('');
       }
     } catch (err) {
       console.error('Error running the algorithm', err);
-      setError('Error running the algorithm: ' + err.response?.data?.error || err.message); // Log exact error
-    }
-  };
+      setError(`Error running the algorithm: ${err.response?.data?.error || err.message}`);
+    } 
+};  
 
   return (
     <div>

@@ -7,6 +7,7 @@ import sequelize from "./config/dbConfig.js";
 import authRoutes from "./routes/authRoutes.js";
 import algorithimRoutes from "./routes/algorithmRoutes.js" 
 import simulationRoutes from "./routes/simulationRoutes.js";
+import setupAssociations from './models/associations.js';
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 connectDB();
+setupAssociations();
+
+// Sync database
 sequelize.sync();
 
 

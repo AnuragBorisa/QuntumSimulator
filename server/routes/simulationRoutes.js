@@ -5,6 +5,8 @@ import { upload } from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
 
+
+router.get('/recent', protect, authorize('student'), getRecentSimulations);
 router.route('/')
   .post(protect, authorize('student'), createSimulation)
   .get(protect, authorize('student'), getSimulations);
@@ -14,7 +16,7 @@ router.route('/:id')
   .put(protect, authorize('student'), updateSimulation)
   .delete(protect, authorize('student'), deleteSimulation);
 
-router.get('/recent', protect, authorize('student'), getRecentSimulations);
+
 
 
 router.post('/:id/upload', protect, authorize('student'), upload, uploadFile);

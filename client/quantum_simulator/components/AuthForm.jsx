@@ -32,7 +32,7 @@ const AuthForm = ({ mode }) => {
         const { token, role: userRole } = res.data; // Get role from backend response
         localStorage.setItem('token', token); 
         localStorage.setItem('role', userRole); // Set the role from backend, not the registration form
-        router.push('/'); // Redirect to homepage
+        router.push('/dashboard'); // Redirect to homepage
       }
     } catch (err) {
       console.error(err);

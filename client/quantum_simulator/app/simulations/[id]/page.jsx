@@ -8,7 +8,7 @@ import RunAlgorithm from '../../../components/RunAlgorithm'; // Import the RunAl
 export default function SimulationDetails({ params }) {
   const [simulation, setSimulation] = useState(null);
   const [error, setError] = useState('');
-  const { id } = params;
+  const { id } = params; // Extract simulation ID from the params
 
   const router = useRouter();
 
@@ -42,12 +42,13 @@ export default function SimulationDetails({ params }) {
       <h2 className="text-2xl font-bold mb-4">{simulation.title}</h2>
       <p><strong>Algorithm:</strong> {simulation.algorithm}</p>
       <p><strong>Parameters:</strong> {JSON.stringify(simulation.parameters)}</p>
-      {/* <p><strong>Results:</strong> {simulation.results ? JSON.stringify(simulation.results) : 'No results available'}</p> */}
+      <p><strong>Results:</strong> {simulation.results ? JSON.stringify(simulation.results) : 'No results available'}</p>
 
-      {/* Use the RunAlgorithm component and pass the algorithm and parameters */}
+      {/* Pass the simulation ID to the RunAlgorithm component */}
       <RunAlgorithm 
         algorithm={simulation.algorithm} 
         parameters={simulation.parameters} 
+        simulationId={id} // Pass the simulationId to the RunAlgorithm component
       />
 
       <button

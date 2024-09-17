@@ -13,14 +13,21 @@ export default function RecentSimulations() {
         const res = await axios.get('http://localhost:8080/api/simulations/recent', {
           headers: { 'x-auth-token': token },
         });
-        setSimulations(res.data);
+  
+        console.log('Fetched simulations:', res.data);  // Debugging
+        if (res.data && res.data.length > 0) {
+          setSimulations(res.data);
+        } else {
+          setSimulations([]);  // No simulations found
+        }
       } catch (err) {
         console.error('Error fetching recent simulations', err);
       }
     };
-
+  
     fetchRecentSimulations();
   }, []);
+  
 
   return (
     <div>

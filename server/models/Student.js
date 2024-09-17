@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/dbConfig.js";
-import Simulation from "./Simulation.js";
+
 const Student = sequelize.define("Student", {
   id: {
     type: DataTypes.INTEGER,
@@ -31,6 +31,5 @@ const Student = sequelize.define("Student", {
   resetPasswordToken: { type: DataTypes.STRING, allowNull: true },
   resetPasswordExpires: { type: DataTypes.DATE, allowNull: true },
 });
-Student.hasMany(Simulation, { as: "savedSimulations" });
-Student.hasOne(Simulation, { as: "currentSimulationState" });
+
 export default Student;
