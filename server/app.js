@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 connectDB();
 sequelize.sync();
 
-// Serve the uploads directory statically
+
 app.use('/uploads', express.static('uploads'));
 
 app.get("/", (req, res) => {

@@ -5,12 +5,18 @@ import User from '../models/User.js';
 import Student from '../models/Student.js';
 import nodemailer from 'nodemailer';
 
+// Helper function to generate JWT token
 const generateToken = (user, res) => {
   const payload = { user: { id: user.id, role: user.role } };
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-  res.status(200).json({ token, userId: user.id });
+  res.status(200).json({
+    token,
+    userId: user.id,
+    role: user.role, // Include role in response
+  });
 };
 
+// Register a new student
 export const registerStudent = async (req, res) => {
   const { name, email, password } = req.body;
   const errors = validationResult(req);
@@ -30,6 +36,7 @@ export const registerStudent = async (req, res) => {
   }
 };
 
+// Register a new user
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -48,18 +55,29 @@ export const registerUser = async (req, res) => {
   }
 };
 
+// Login for both student and user
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    let user = await Student.findOne({ where: { email } }) || await User.findOne({ where: { email } });
+    // Find the user in either Student or User table
+    let user = await Student.findOne({ where: { email } });
+    if (!user) {
+      user = await User.findOne({ where: { email } });
+    }
+
+    // If user not found, return error
     if (!user) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
+
+    // Check if the password matches
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
+
+    // Generate token with the correct role and id
     generateToken(user, res);
   } catch (err) {
     console.error(err.message);
@@ -67,6 +85,7 @@ export const login = async (req, res) => {
   }
 };
 
+// Forgot password logic
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
@@ -101,6 +120,7 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
+// Verify password reset token
 export const verifyToken = async (req, res) => {
   const { token } = req.params;
   try {
@@ -112,6 +132,7 @@ export const verifyToken = async (req, res) => {
   }
 };
 
+// Update password after resetting
 export const updatePassword = async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;

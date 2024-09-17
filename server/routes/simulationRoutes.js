@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect, authorize } from '../middlewares/authMiddleware.js';
-import { createSimulation, getSimulations, getSimulation, updateSimulation, deleteSimulation, uploadFile, downloadFile } from '../controllers/simulationController.js';
+import { createSimulation, getSimulations, getSimulation, getRecentSimulations,updateSimulation, deleteSimulation, uploadFile, downloadFile } from '../controllers/simulationController.js';
 import { upload } from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
@@ -13,6 +13,8 @@ router.route('/:id')
   .get(protect, authorize('student'), getSimulation)
   .put(protect, authorize('student'), updateSimulation)
   .delete(protect, authorize('student'), deleteSimulation);
+
+router.get('/recent', protect, authorize('student'), getRecentSimulations);
 
 
 router.post('/:id/upload', protect, authorize('student'), upload, uploadFile);

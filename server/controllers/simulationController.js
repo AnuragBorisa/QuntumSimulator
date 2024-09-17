@@ -36,6 +36,22 @@ export const getSimulations = async (req, res) => {
   }
 };
 
+export const getRecentSimulations = async (req, res) => {
+  try {
+   
+    const simulations = await Simulation.findAll({
+      where: { StudentId: req.user.id },
+      order: [['createdAt', 'DESC']], 
+      limit: 5,  
+    });
+    res.status(200).json(simulations);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+
 export const getSimulation = async (req, res) => {
   const { id } = req.params;
   try {

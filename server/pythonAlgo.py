@@ -5,13 +5,21 @@ from qiskit.circuit.library import GroverOperator
 from qiskit.visualization import plot_histogram
 
 def run_grover(n, target_state):
+    # Ensure the target state has the correct length
+    if len(target_state) != n:
+        raise ValueError(f"Target state length ({len(target_state)}) does not match number of qubits (n={n})")
+
     # Create a quantum circuit with n qubits
     qc = QuantumCircuit(n)
     qc.h(range(n))  # Apply Hadamard to all qubits
 
     # Define the oracle for the target state
     oracle = QuantumCircuit(n)
-    oracle.z(target_state)
+    
+    # Apply Z-gate on the qubits that match the target state
+    for idx, bit in enumerate(target_state):
+        if bit == 1:
+            oracle.z(idx)
 
     # Grover's diffusion operator
     grover_op = GroverOperator(oracle)
@@ -38,7 +46,7 @@ def run_grover(n, target_state):
 if __name__ == "__main__":
     # Expecting parameters n and target_state from command line arguments
     n = int(sys.argv[1])
-    target_state = int(sys.argv[2])
+    target_state = [int(x) for x in sys.argv[2].strip('"')]
 
     result = run_grover(n, target_state)
     print(result)
